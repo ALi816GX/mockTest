@@ -37,10 +37,6 @@ public class SalesApp {
 		
 	}
 
-    protected List<SalesReportData> getSalesReportDatasBySales(Sales sales) {
-        return salesReportDao.getReportData(sales);
-    }
-
     protected Sales getSalesBySalesId(String salesId) {
         return salesDao.getSalesBySalesId(salesId);
     }
@@ -50,6 +46,9 @@ public class SalesApp {
         return today.after(sales.getEffectiveTo()) || today.before(sales.getEffectiveFrom());
     }
 
+    protected List<SalesReportData> getSalesReportDatasBySales(Sales sales) {
+        return salesReportDao.getReportData(sales);
+    }
 
     protected List<String> getHeaders(boolean isNatTrade) {
         if (isNatTrade) {
