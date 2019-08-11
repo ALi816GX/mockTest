@@ -6,7 +6,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import static junit.framework.TestCase.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
@@ -33,15 +39,41 @@ public class SalesAppTest {
 	public void shoule_return_Sales_when_call_getSalesBySalesId_given_SalesId(){
 
 		String salesId = "Test";
-		Sales sales1 = new Sales();
-		sales1.setSupervisor(true);
-		when(salesDao.getSalesBySalesId(salesId)).thenReturn(sales1);
+		Sales sales = new Sales();
+        sales.setSupervisor(true);
+		when(salesDao.getSalesBySalesId(salesId)).thenReturn(sales);
 
-		Sales sales = salesApp.getSalesBySalesId(salesId);
+		Sales result = salesApp.getSalesBySalesId(salesId);
 
-		assertTrue(sales.isSupervisor());
+		assertTrue(result.isSupervisor() == sales.isSupervisor());
 
 	}
+
+
+    @Test
+    public void should_return_true_when_call_isNotDuringEffectiveDate_given_the_first_day_and_the_last_day_in_current_month() {
+
+		Sales mockSales = mock(Sales.class);
+
+		Calendar from =Calendar.getInstance();
+		from.add(Calendar.MONTH, 1);// the first day of current month
+		Date fromDate = from.getTime();
+
+		Calendar to = Calendar.getInstance();
+		to.add(Calendar.DAY_OF_MONTH, to.getActualMaximum(Calendar.DAY_OF_MONTH));// the last day of current month
+		Date toDate = to.getTime();
+
+        when(mockSales.getEffectiveFrom()).thenReturn(fromDate);
+        when(mockSales.getEffectiveTo()).thenReturn(toDate);
+
+        boolean result = salesApp.isNotDuringEffectiveDate(mockSales);
+
+        assertTrue(result == true);
+
+    }
+
+
+
 
 
 
