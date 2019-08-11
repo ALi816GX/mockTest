@@ -17,14 +17,12 @@ public class SalesApp {
 
 		SalesDao salesDao = new SalesDao();
 		Sales sales = salesDao.getSalesBySalesId(salesId);
-		
-		Date today = new Date();
-		if (today.after(sales.getEffectiveTo())
-				|| today.before(sales.getEffectiveFrom())){
-			return;
-		}
 
-		SalesReportDao salesReportDao = new SalesReportDao();
+        if (isNotDuringEffectiveDate(sales)) {
+            return;
+        }
+
+        SalesReportDao salesReportDao = new SalesReportDao();
 		List<SalesReportData> reportDataList = salesReportDao.getReportData(sales);
 
 
@@ -40,6 +38,15 @@ public class SalesApp {
 		ecmService.uploadDocument(report.toXml());
 		
 	}
+
+    private boolean isNotDuringEffectiveDate(Sales sales) {
+        Date today = new Date();
+        if (today.after(sales.getEffectiveTo())
+                || today.before(sales.getEffectiveFrom())){
+            return true;
+        }
+        return false;
+    }
 
     private List<SalesReportData> getSalesReportData(int maxRow, List<SalesReportData> reportDataList) {
         List<SalesReportData> tempList = new ArrayList<SalesReportData>();
