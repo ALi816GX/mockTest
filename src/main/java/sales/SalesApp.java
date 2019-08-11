@@ -7,45 +7,40 @@ import java.util.List;
 
 public class SalesApp {
 
-	public void generateSalesActivityReport(String salesId, int maxRow, boolean isNatTrade, boolean isSupervisor) {
-		
+    private SalesDao salesDao;
+    private SalesReportDao salesReportDao;
+    private EcmService ecmService;
+
+    public SalesApp() {
+        this.salesDao = new SalesDao();
+        this.salesReportDao = new SalesReportDao();
+        this.ecmService = new EcmService();
+    }
+
+    public void generateSalesActivityReport(String salesId, int maxRow, boolean isNatTrade, boolean isSupervisor) {
 
 		if (salesId == null) {
 			return;
 		}
 
-
-		SalesDao salesDao = new SalesDao();
 		Sales sales = salesDao.getSalesBySalesId(salesId);
 
-        if (isNotDuringEffectiveDate(sales)) {
+		if (isNotDuringEffectiveDate(sales)) {
             return;
         }
 
-        SalesReportDao salesReportDao = new SalesReportDao();
 		List<SalesReportData> reportDataList = salesReportDao.getReportData(sales);
-
-
-        List<SalesReportData> filteredReportDataList = getFilteredReportDataList(isSupervisor, reportDataList);
-
+		List<SalesReportData> filteredReportDataList = getFilteredReportDataList(isSupervisor, reportDataList);
 		filteredReportDataList = getSalesReportData(maxRow, reportDataList);
-
-        List<String> headers = getHeaders(isNatTrade);
-		
+		List<String> headers = getHeaders(isNatTrade);
 		SalesActivityReport report = this.generateReport(headers, reportDataList);
-		
-		EcmService ecmService = new EcmService();
 		ecmService.uploadDocument(report.toXml());
 		
 	}
 
     private boolean isNotDuringEffectiveDate(Sales sales) {
         Date today = new Date();
-        if (today.after(sales.getEffectiveTo())
-                || today.before(sales.getEffectiveFrom())){
-            return true;
-        }
-        return false;
+        return today.after(sales.getEffectiveTo()) || today.before(sales.getEffectiveFrom());
     }
 
     private List<SalesReportData> getSalesReportData(int maxRow, List<SalesReportData> reportDataList) {
