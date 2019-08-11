@@ -23,19 +23,27 @@ public class SalesApp {
 			return;
 		}
 
-		Sales sales = salesDao.getSalesBySalesId(salesId);
+        Sales sales = getSalesBySalesId(salesId);
 
-		if (isNotDuringEffectiveDate(sales)) {
+        if (isNotDuringEffectiveDate(sales)) {
             return;
         }
 
-		List<SalesReportData> reportDataList = salesReportDao.getReportData(sales);
+        List<SalesReportData> reportDataList = getSalesReportDatasBySales(sales);
 
-		List<String> headers = getHeaders(isNatTrade);
+        List<String> headers = getHeaders(isNatTrade);
 		SalesActivityReport report = this.generateReport(headers, reportDataList);
 		ecmService.uploadDocument(report.toXml());
 		
 	}
+
+    protected List<SalesReportData> getSalesReportDatasBySales(Sales sales) {
+        return salesReportDao.getReportData(sales);
+    }
+
+    protected Sales getSalesBySalesId(String salesId) {
+        return salesDao.getSalesBySalesId(salesId);
+    }
 
     protected boolean isNotDuringEffectiveDate(Sales sales) {
         Date today = new Date();
