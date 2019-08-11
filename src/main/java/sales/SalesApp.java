@@ -29,12 +29,8 @@ public class SalesApp {
 
 
         List<SalesReportData> filteredReportDataList = getFilteredReportDataList(isSupervisor, reportDataList);
-		
-		List<SalesReportData> tempList = new ArrayList<SalesReportData>();
-		for (int i=0; i < reportDataList.size() || i < maxRow; i++) {
-			tempList.add(reportDataList.get(i));
-		}
-		filteredReportDataList = tempList;
+
+		filteredReportDataList = getSalesReportData(maxRow, reportDataList);
 
         List<String> headers = getHeaders(isNatTrade);
 		
@@ -44,6 +40,14 @@ public class SalesApp {
 		ecmService.uploadDocument(report.toXml());
 		
 	}
+
+    private List<SalesReportData> getSalesReportData(int maxRow, List<SalesReportData> reportDataList) {
+        List<SalesReportData> tempList = new ArrayList<SalesReportData>();
+        for (int i=0; i < reportDataList.size() || i < maxRow; i++) {
+            tempList.add(reportDataList.get(i));
+        }
+        return tempList;
+    }
 
     private List<SalesReportData> getFilteredReportDataList(boolean isSupervisor, List<SalesReportData> reportDataList) {
         List<SalesReportData> filteredReportDataList = new ArrayList<SalesReportData>();
