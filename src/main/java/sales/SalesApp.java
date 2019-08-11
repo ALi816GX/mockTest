@@ -58,13 +58,11 @@ public class SalesApp {
 	}
 
     private List<String> getHeaders(boolean isNatTrade) {
-
         if (isNatTrade) {
             return Arrays.asList("Sales ID", "Sales Name", "Activity", "Time");
         }
 
         return Arrays.asList("Sales ID", "Sales Name", "Activity", "Local Time");
-
     }
 
 
