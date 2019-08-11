@@ -48,13 +48,7 @@ public class SalesApp {
 		filteredReportDataList = tempList;
 
 
-
-		List<String> headers = null;
-		if (isNatTrade) {
-			headers = Arrays.asList("Sales ID", "Sales Name", "Activity", "Time");
-		} else {
-			headers = Arrays.asList("Sales ID", "Sales Name", "Activity", "Local Time");
-		}
+        List<String> headers = getHeaders(isNatTrade);
 		
 		SalesActivityReport report = this.generateReport(headers, reportDataList);
 		
@@ -63,9 +57,18 @@ public class SalesApp {
 		
 	}
 
+    private List<String> getHeaders(boolean isNatTrade) {
+
+        if (isNatTrade) {
+            return Arrays.asList("Sales ID", "Sales Name", "Activity", "Time");
+        }
+
+        return Arrays.asList("Sales ID", "Sales Name", "Activity", "Local Time");
+
+    }
 
 
-	private SalesActivityReport generateReport(List<String> headers, List<SalesReportData> reportDataList) {
+    private SalesActivityReport generateReport(List<String> headers, List<SalesReportData> reportDataList) {
 		// TODO Auto-generated method stub
 		return null;
 	}
