@@ -28,25 +28,13 @@ public class SalesApp {
 		List<SalesReportData> reportDataList = salesReportDao.getReportData(sales);
 
 
-		List<SalesReportData> filteredReportDataList = new ArrayList<SalesReportData>();
-		for (SalesReportData data : reportDataList) {
-			if ("SalesActivity".equalsIgnoreCase(data.getType())) {
-				if (data.isConfidential()) {
-					if (isSupervisor) {
-						filteredReportDataList.add(data);
-					}
-				}else {
-					filteredReportDataList.add(data);
-				}
-			}
-		}
+        List<SalesReportData> filteredReportDataList = getFilteredReportDataList(isSupervisor, reportDataList);
 		
 		List<SalesReportData> tempList = new ArrayList<SalesReportData>();
 		for (int i=0; i < reportDataList.size() || i < maxRow; i++) {
 			tempList.add(reportDataList.get(i));
 		}
 		filteredReportDataList = tempList;
-
 
         List<String> headers = getHeaders(isNatTrade);
 		
@@ -56,6 +44,22 @@ public class SalesApp {
 		ecmService.uploadDocument(report.toXml());
 		
 	}
+
+    private List<SalesReportData> getFilteredReportDataList(boolean isSupervisor, List<SalesReportData> reportDataList) {
+        List<SalesReportData> filteredReportDataList = new ArrayList<SalesReportData>();
+        for (SalesReportData data : reportDataList) {
+            if ("SalesActivity".equalsIgnoreCase(data.getType())) {
+                if (data.isConfidential()) {
+                    if (isSupervisor) {
+                        filteredReportDataList.add(data);
+                    }
+                }else {
+                    filteredReportDataList.add(data);
+                }
+            }
+        }
+        return filteredReportDataList;
+    }
 
     private List<String> getHeaders(boolean isNatTrade) {
         if (isNatTrade) {
