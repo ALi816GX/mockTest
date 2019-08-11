@@ -1,5 +1,6 @@
 package sales;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -22,6 +23,9 @@ public class SalesAppTest {
 
 	@Mock
 	SalesDao salesDao;
+
+	@Mock
+	SalesReportDao salesReportDao;
 
 	@InjectMocks
 	SalesApp salesApp = new SalesApp();
@@ -71,6 +75,30 @@ public class SalesAppTest {
         assertTrue(result == true);
 
     }
+
+	@Test
+	public void should_return_salesReportDatas_when_call_getSalesReportDatasBySales_given_sales() {
+
+		Sales sales = mock(Sales.class);
+
+		SalesReportData salesReportData = mock(SalesReportData.class);
+		when(salesReportData.isConfidential()).thenReturn(true);
+		when(salesReportData.getType()).thenReturn("Test");
+
+		ArrayList<SalesReportData> salesReportDatas = new ArrayList<>();
+		salesReportDatas.add(salesReportData);
+
+		when(salesReportDao.getReportData(sales)).thenReturn(salesReportDatas);
+
+		List<SalesReportData> salesReportDataBySales = salesApp.getSalesReportDatasBySales(sales);
+		SalesReportData result = salesReportDataBySales.get(0);
+
+
+		assertTrue(salesReportDataBySales.size() == 1);
+		Assert.assertEquals("Test",result.getType());
+		Assert.assertEquals(true,result.isConfidential());
+
+	}
 
 
 
