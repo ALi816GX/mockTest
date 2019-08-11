@@ -30,8 +30,7 @@ public class SalesApp {
         }
 
 		List<SalesReportData> reportDataList = salesReportDao.getReportData(sales);
-		List<SalesReportData> filteredReportDataList = getFilteredReportDataList(isSupervisor, reportDataList);
-		filteredReportDataList = getSalesReportData(maxRow, reportDataList);
+
 		List<String> headers = getHeaders(isNatTrade);
 		SalesActivityReport report = this.generateReport(headers, reportDataList);
 		ecmService.uploadDocument(report.toXml());
@@ -43,30 +42,6 @@ public class SalesApp {
         return today.after(sales.getEffectiveTo()) || today.before(sales.getEffectiveFrom());
     }
 
-    protected List<SalesReportData> getSalesReportData(int maxRow, List<SalesReportData> reportDataList) {
-        List<SalesReportData> tempList = new ArrayList<SalesReportData>();
-        for (int i=0; i < reportDataList.size() || i < maxRow; i++) {
-            tempList.add(reportDataList.get(i));
-        }
-        return tempList;
-    }
-
-    protected List<SalesReportData> getFilteredReportDataList(boolean isSupervisor, List<SalesReportData> reportDataList) {
-        List<SalesReportData> filteredReportDataList = new ArrayList<SalesReportData>();
-        for (SalesReportData data : reportDataList) {
-            if ("SalesActivity".equalsIgnoreCase(data.getType())) {
-                if (data.isConfidential()) {
-                    if (isSupervisor) {
-                        filteredReportDataList.add(data);
-                    }
-                }
-                else {
-                    filteredReportDataList.add(data);
-                }
-            }
-        }
-        return filteredReportDataList;
-    }
 
     protected List<String> getHeaders(boolean isNatTrade) {
         if (isNatTrade) {
