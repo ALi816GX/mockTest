@@ -38,12 +38,12 @@ public class SalesApp {
 		
 	}
 
-    private boolean isNotDuringEffectiveDate(Sales sales) {
+    protected boolean isNotDuringEffectiveDate(Sales sales) {
         Date today = new Date();
         return today.after(sales.getEffectiveTo()) || today.before(sales.getEffectiveFrom());
     }
 
-    private List<SalesReportData> getSalesReportData(int maxRow, List<SalesReportData> reportDataList) {
+    protected List<SalesReportData> getSalesReportData(int maxRow, List<SalesReportData> reportDataList) {
         List<SalesReportData> tempList = new ArrayList<SalesReportData>();
         for (int i=0; i < reportDataList.size() || i < maxRow; i++) {
             tempList.add(reportDataList.get(i));
@@ -51,7 +51,7 @@ public class SalesApp {
         return tempList;
     }
 
-    private List<SalesReportData> getFilteredReportDataList(boolean isSupervisor, List<SalesReportData> reportDataList) {
+    protected List<SalesReportData> getFilteredReportDataList(boolean isSupervisor, List<SalesReportData> reportDataList) {
         List<SalesReportData> filteredReportDataList = new ArrayList<SalesReportData>();
         for (SalesReportData data : reportDataList) {
             if ("SalesActivity".equalsIgnoreCase(data.getType())) {
@@ -59,7 +59,8 @@ public class SalesApp {
                     if (isSupervisor) {
                         filteredReportDataList.add(data);
                     }
-                }else {
+                }
+                else {
                     filteredReportDataList.add(data);
                 }
             }
@@ -67,14 +68,13 @@ public class SalesApp {
         return filteredReportDataList;
     }
 
-    private List<String> getHeaders(boolean isNatTrade) {
+    protected List<String> getHeaders(boolean isNatTrade) {
         if (isNatTrade) {
             return Arrays.asList("Sales ID", "Sales Name", "Activity", "Time");
         }
 
         return Arrays.asList("Sales ID", "Sales Name", "Activity", "Local Time");
     }
-
 
     private SalesActivityReport generateReport(List<String> headers, List<SalesReportData> reportDataList) {
 		// TODO Auto-generated method stub
