@@ -33,8 +33,8 @@ public class SalesAppTest {
 	@Test
 	public void testGenerateReport() {
 		
-		SalesApp salesApp = new SalesApp();
-		salesApp.generateSalesActivityReport("DUMMY", 1000, false, false);
+		//SalesApp salesApp = new SalesApp();
+		//salesApp.generateSalesActivityReport("DUMMY", 1000, false, false);
 		
 	}
 
@@ -99,6 +99,26 @@ public class SalesAppTest {
 		Assert.assertEquals(true,result.isConfidential());
 
 	}
+
+    @Test
+    public void should_return_containsTime_when_call_getHeaders_given_true() {
+
+        boolean isNatTrade = true;
+
+        List<String> headers = salesApp.getHeaders(isNatTrade);
+
+        assertTrue(headers.contains("Time"));
+    }
+
+    @Test
+    public void should_return_containsLocalTime_when_call_getHeaders_given_false() {
+
+        boolean isNatTrade = false;
+
+        List<String> headers = salesApp.getHeaders(isNatTrade);
+
+        assertTrue(headers.contains("Local Time"));
+    }
 
 
 
